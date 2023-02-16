@@ -5,7 +5,7 @@
  
  TENSILE TEST
  
- Eric Monteiro - PIMM    execfile('D:/01_git/demos_abaqus/py/demo_TensileTest.py', __main__.__dict__)
+ Eric Monteiro - PIMM    
  
  v0.0 - 16/02/2023
 '''
@@ -14,6 +14,7 @@ from abaqus import *
 from abaqusConstants import *
 from caeModules import *
 import numpy as np
+import os
 
 Mdb()
 
@@ -104,7 +105,7 @@ a = mdb.models['Model-1'].rootAssembly;a.DatumCsysByDefault(CARTESIAN)
 a.Instance(dependent=ON, name='sample',part=p)
 #
 rp1 = a.ReferencePoint(point=(1.25*param['dim'][0]/2., 0., 0.))
-a.Set(name='RP1', referencePoints=(a.referencePoints[rp1.id], ))  #(a.referencePoints[rp1.id], )
+a.Set(name='RP1', referencePoints=(a.referencePoints[rp1.id], ))  
 mdb.models['Model-1'].MultipointConstraint(name='RGB1', mpcType=BEAM_MPC, csys=None,
     controlPoint=a.sets['RP1'], surface=a.instances['sample'].sets['XL'], userMode=DOF_MODE_MPC, userType=0) 
  
@@ -117,7 +118,7 @@ mdb.models['Model-1'].ImplicitDynamicsStep(name='demo_TensileTest', previous='In
 # OUTPUT
 #----------------------------------------------------------------------------
 mdb.models['Model-1'].fieldOutputRequests['F-Output-1'].setValues(variables=(
-    'S', 'E', 'EE', 'U', 'V', 'A', 'RF'), timeInterval=1.)
+    'S', 'E', 'EE', 'U', 'RF'), timeInterval=1.)
 
     
 # LOAD
