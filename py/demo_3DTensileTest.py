@@ -5,7 +5,7 @@
  
  TENSILE TEST
  
- Eric Monteiro - PIMM    
+ Eric Monteiro - PIMM - PARIS - FRANCE 
  
  v0.0 - 16/02/2023
 '''
@@ -108,6 +108,7 @@ rp1 = a.ReferencePoint(point=(1.25*param['dim'][0]/2., 0., 0.))
 a.Set(name='RP1', referencePoints=(a.referencePoints[rp1.id], ))  
 mdb.models['Model-1'].MultipointConstraint(name='RGB1', mpcType=BEAM_MPC, csys=None,
     controlPoint=a.sets['RP1'], surface=a.instances['sample'].sets['XL'], userMode=DOF_MODE_MPC, userType=0) 
+
  
 # STEP
 #---------------------------------------------------------------------------- 
@@ -129,9 +130,12 @@ mdb.models['Model-1'].EncastreBC(name='fix', createStepName='Initial', region=a.
 mdb.models['Model-1'].ConcentratedForce(name='Load', createStepName='demo_TensileTest', 
      region=a.sets['RP1'], cf1=param['load'], distributionType=UNIFORM, field='', localCsys=None)
 
+
 # JOB
 #----------------------------------------------------------------------------
-mdb.Job(name='demo_TensileTest', model='Model-1', description='', type=ANALYSIS, 
+jobname='demo_3DTensileTest'
+
+mdb.Job(name=jobname, model='Model-1', description='', type=ANALYSIS, 
     atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=90, 
     memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, 
     explicitPrecision=SINGLE, nodalOutputPrecision=FULL, echoPrint=OFF, 
@@ -139,14 +143,19 @@ mdb.Job(name='demo_TensileTest', model='Model-1', description='', type=ANALYSIS,
     scratch='', resultsFormat=ODB, multiprocessingMode=DEFAULT, numCpus=2, 
     numDomains=2, numGPUs=0)
 
+mdb.saveAs(pathName=os.path.join(os.getcwd(),jobname))
+session.viewports['Viewport: 1'].setValues(displayedObject=mdb.models['Model-1'].rootAssembly)
 if param['run']:
- mdb.jobs['demo_TensileTest'].submit(consistencyChecking=OFF)	
- mdb.jobs['demo_TensileTest'].waitForCompletion()
- 
+ mdb.jobs[jobname].submit(consistencyChecking=OFF)	
+ mdb.jobs[jobname].waitForCompletion()
+else:
+ mdb.jobs[jobname].writeInput(consistencyChecking=OFF)
+
+
 # POST
 #---------------------------------------------------------------------------- 
 if param['run']:
- o3 = session.openOdb(name=os.path.join(os.getcwd(),'demo_TensileTest.odb'))
+ o3 = session.openOdb(name=os.path.join(os.getcwd(), jobname+'.odb'))
  session.viewports['Viewport: 1'].setValues(displayedObject=o3)
  session.viewports['Viewport: 1'].odbDisplay.display.setValues(plotState=(CONTOURS_ON_DEF, ))
  session.viewports['Viewport: 1'].odbDisplay.setFrame(step=0, frame=0 )
