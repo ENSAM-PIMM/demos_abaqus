@@ -22,9 +22,9 @@ Mdb()
 #----------------------------------------------------------------------------
 param=dict()
 param['dim']=[100.e-3,10.e-3,100.e-3]  # dimensions of medium
-param['2Dopt']= 'strain'               # flag: 'stress' (plane stress) or 'strain' (plane strain)
+param['2Dopt']= 'stress'               # flag: 'stress' (plane stress) or 'strain' (plane strain)
 param['selt']=[1.0e-3, 0.1]            # element size
-param['quad']=False                    # linear/quadratic elements
+param['quad']=True                     # linear/quadratic elements
 param['load']=[20e-3, 40e-3, 2, -1.]  # applied load: [xstart, Lzone, dir, load]
 param['freq']=[2e3, 3e3, 3, 1]         # frequency range
 param['run']=False                     # run
